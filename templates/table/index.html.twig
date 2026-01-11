@@ -15,7 +15,6 @@
                     <th>ID</th>
                     <th>Nom/Numéro</th>
                     <th>Capacité</th>
-                    <th>Emplacement</th>
                     <th>Statut</th>
                     <th>Actions</th>
                 </tr>
@@ -24,9 +23,8 @@
                 {% for table in tables %}
                     <tr>
                         <td class="fw-bold">#{{ table.id }}</td>
-                        <td>{{ table.idnom }}</td>
+                        <td>{{ table.nom }}</td>
                         <td>{{ table.capacite }} Pers.</td>
-                        <td>{{ table.emplacement }}</td>
                         <td>
                             <span class="badge rounded-pill {{ table.statut == 'Libre' ? 'bg-success' : 'bg-warning text-dark' }}">
                                 {{ table.statut|upper }}
