@@ -1,0 +1,32 @@
+{# templates/home/index.html.twig #}
+
+{# CETTE LIGNE EST LA PLUS IMPORTANTE. ELLE CONNECTE CETTE PAGE À LA PAGE PRINCIPALE. #}
+{% extends 'base.html.twig' %}
+
+{# Le titre de l'onglet de votre navigateur #}
+{% block title %}Accueil - Resto-Booking{% endblock %}
+
+{# Le contenu principal de votre page #}
+{% block body %}
+
+    <div class="container text-center mt-5">
+        
+        {# Le titre que vous voyez déjà #}
+        <h1>Bonjour et bienvenue !</h1>
+        
+        <p class="lead">Ceci est la page d'accueil de votre application.</p>
+
+        {# 
+           On affiche les liens seulement si l'utilisateur N'EST PAS connecté.
+           S'il est connecté, les liens "Déconnexion" sont déjà dans la barre de navigation.
+        #}
+        {% if not app.user %}
+            <div class="mt-4">
+                <a href="{{ path('app_login') }}" class="btn btn-primary">Se Connecter</a>
+                <a href="{{ path('app_register') }}" class="btn btn-secondary">S'inscrire</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
