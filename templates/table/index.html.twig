@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Tables{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-uppercase fw-light">Liste des tables</h1>
+        
+        {# زر الإضافة بنفس طريقة الـ Facture #}
+        <a href="#" class="btn btn-dark mt-3 mb-3 text-uppercase">Ajouter une table</a>
+        
+        <table class="table table-hover border">
+            <thead>
+                <tr class="table-dark text-uppercase small">
+                    <th>ID</th>
+                    <th>Nom/Numéro</th>
+                    <th>Capacité</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                {% for table in tables %}
+                    <tr>
+                        <td class="fw-bold">#{{ table.id }}</td>
+                        <td>{{ table.nom }}</td>
+                        <td>{{ table.capacite }} Pers.</td>
+                        <td>
+                            <span class="badge rounded-pill {{ table.statut == 'Libre' ? 'bg-success' : 'bg-warning text-dark' }}">
+                                {{ table.statut|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            {# زر التعديل (Edit) بنفس ستايل الـ Facture #}
+                            <a href="#" class="btn badge bg-warning px-3 py-2">
+                                <i class="fas fa-pen text-dark"></i>
+                            </a>
+                            
+                            {# نموذج الحذف (Delete) بنفس الطريقة اللي دار الأستاذ #}
+                            <form method="post" action="#" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette table ?');">
+                                <button class="btn badge bg-danger px-3 py-2 border-0">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted small">Aucune table trouvée dans la base de données.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
