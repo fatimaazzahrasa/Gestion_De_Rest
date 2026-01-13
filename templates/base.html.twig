@@ -43,9 +43,24 @@
                         </li>
 
                         {% if app.user %}
+                            
+                            {# ========================================================= #}
+                            {# === LOGIQUE DE NAVIGATION CORRIGÉE === #}
+                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SERVER') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Gestion Réservations</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Mes Réservations</a>
+                                </li>
+                            {% endif %}
+                            {# ========================================================= #}
+
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                             </li>
+
                         {% else %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
