@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-uppercase fw-light">Liste de Menu</h1>
+        <a href="{{ path('app_menu_new') }}" class="btn btn-dark mt-3 mb-3">Ajouter un Menu</a>
+        
+        <table class="table table-hover border text-center">
+            <thead>
+                <tr class="table-dark text-uppercase small">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Prix</th>
+                    <th>Catégorie</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                {% for menu in menu %}
+                    <tr>
+                        <td class="fw-bold">#{{ menu.id }}</td>
+                        <td>{{ menu.name }}</td>
+                        <td>{{ menu.prix }} DH</td>
+                        <td>{{ menu.categorie }}</td>
+                        <td>{{ menu.description }}</td>
+                        <td>
+                            {# زر التعديل #}
+                            <a href="{{ path('app_menu_edit', {'id': menu.id}) }}" class="btn badge bg-warning px-3 py-2">
+                                <i class="fas fa-pen text-dark"></i>
+                            </a>
+
+                            {# زر الحذف #}
+                            <form method="post" action="{{ path('app_menu_delete', {'id': menu.id}) }}" style="display: inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce menu ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ menu.id) }}">
+                                <button class="btn badge bg-danger px-3 py-2 border-0">
+                                    <i class="fas fa-trash text-white"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">Aucun menu trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
