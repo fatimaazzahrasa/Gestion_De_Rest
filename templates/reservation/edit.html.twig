@@ -1,4 +1,4 @@
-{# templates/reservation/edit.html.twig #}
+
 
 {% extends 'base.html.twig' %}
 
@@ -7,15 +7,13 @@
 {% block body %}
     <div class="row justify-content-center">
         <div class="col-md-6">
-            {# 1. On change le titre #}
+            
             <h1>Modifier ma réservation</h1>
 
-            {# C'est exactement le même code de formulaire que sur la page "new" #}
             {{ form_start(reservationForm) }}
                 {{ form_row(reservationForm.reservation_date) }}
                 {{ form_row(reservationForm.nbr_personne) }}
 
-                {# 2. On change le texte du bouton #}
                 <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
             {{ form_end(reservationForm) }}
         </div>

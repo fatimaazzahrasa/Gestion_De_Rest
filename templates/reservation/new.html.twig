@@ -1,6 +1,4 @@
-{# templates/reservation/new.html.twig #}
 
-{# On hérite du modèle de base pour avoir le design et la barre de navigation #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Faire une réservation{% endblock %}
@@ -12,7 +10,7 @@
 
             {{ form_start(reservationForm) }}
                 
-                {# On utilise form_row pour afficher le label + le champ + les erreurs #}
+                
                 {{ form_row(reservationForm.reservation_date) }}
                 {{ form_row(reservationForm.nbr_personne) }}
 

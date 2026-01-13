@@ -1,12 +1,12 @@
 <?php
-// Fichier : src/Controller/ReservationController.php
+
 
 namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
-use App\Repository\TableRepository; // Ajout important
+use App\Repository\TableRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,34 +16,35 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ReservationController extends AbstractController
 {
-    #[Route('/reservations', name: 'app_reservation_index')]
+    #[Route('/reservations', name: 'app_reservation_index', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function index(ReservationRepository $reservationRepository): Response
     {
+        
         if ($this->isGranted('ROLE_ADMIN')) {
-            $reservations = $reservationRepository->findAll();
+            $reservations = $reservationRepository->findBy([], ['reservation_date' => 'DESC']);
             return $this->render('reservation/admin_index.html.twig', [
                 'reservations' => $reservations,
             ]);
         }
 
         if ($this->isGranted('ROLE_SERVER')) {
-            $reservations = $reservationRepository->findAll();
+            $reservations = $reservationRepository->findBy([], ['reservation_date' => 'DESC']);
             return $this->render('reservation/server_index.html.twig', [
                 'reservations' => $reservations,
             ]);
         }
         
+      
         $user = $this->getUser();
-        $reservations = $reservationRepository->findBy(['customer' => $user]);
+        $reservations = $reservationRepository->findBy(['customer' => $user], ['reservation_date' => 'DESC']);
         return $this->render('reservation/customer_index.html.twig', [
             'reservations' => $reservations,
         ]);
     }
     
-    #[Route('/reservation/new', name: 'app_reservation_new')]
+    #[Route('/reservation/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    // On demande à Symfony de nous "injecter" le TableRepository ici
     public function new(Request $request, EntityManagerInterface $entityManager, TableRepository $tableRepository): Response
     {
         $reservation = new Reservation();
@@ -52,47 +53,42 @@ class ReservationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // ===============================================
-            // === LOGIQUE FACTICE POUR TROUVER UNE TABLE ===
-            // On cherche la première table disponible dans la base de données
+          
             $uneTable = $tableRepository->findOneBy([]);
-
-            // Si aucune table n'existe dans le restaurant, on lance une erreur claire.
             if (!$uneTable) {
                 $this->addFlash('danger', 'Le restaurant ne contient aucune table pour le moment. Impossible de réserver.');
                 return $this->redirectToRoute('app_home');
             }
-            // ===============================================
 
-            // On complète les informations de la réservation
+            // On complète les informations
             $reservation->setCustomer($this->getUser());
             $reservation->setStatus('Confirmée');
-            
-            // ON ASSIGNE LA TABLE TROUVÉE À LA RÉSERVATION
             $reservation->setTableRes($uneTable);
             
             $entityManager->persist($reservation);
             $entityManager->flush();
             
-            $this->addFlash('success', 'Votre réservation a bien été enregistrée !');
-            return $this->redirectToRoute('app_reservation_index'); // On redirige vers la liste des résas
+           
+            return $this->redirectToRoute('app_reservation_index', [
+                'id' => $reservation->getId(),
+            ]);
         }
 
         return $this->render('reservation/new.html.twig', [
             'reservationForm' => $form->createView(),
         ]);
     }
+ 
 
-    #[Route('/reservation/{id}/edit', name: 'app_reservation_edit')]
+    #[Route('/reservation/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
     {
-        // Sécurité : Seul un ADMIN ou le propriétaire peut modifier.
+       
         if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $reservation->getCustomer()) {
             throw $this->createAccessDeniedException("Action non autorisée.");
         }
 
-        // Note : Pour l'instant, l'édition ne ré-assigne pas de table.
-        // Elle ne modifie que la date et le nombre de personnes.
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
@@ -107,4 +103,27 @@ class ReservationController extends AbstractController
             'reservationForm' => $form->createView(),
         ]);
     }
+
+
+
+#[Route('/reservation/{id}', name: 'app_reservation_delete', methods: ['POST'])]
+#[IsGranted('ROLE_USER')]
+public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+{
+    
+    if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $reservation->getCustomer()) {
+        throw $this->createAccessDeniedException("Action non autorisée.");
+    }
+
+   
+    if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
+        $entityManager->remove($reservation);
+        $entityManager->flush();
+        
+        $this->addFlash('success', 'La réservation a été annulée avec succès.');
+    }
+
+    return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+}
+
 }

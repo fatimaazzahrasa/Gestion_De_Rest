@@ -1,37 +1,52 @@
-{# templates/reservation/admin_index.html.twig #}
-
 {% extends 'base.html.twig' %}
+
 {% block title %}Gestion des Réservations{% endblock %}
+
 {% block body %}
     <h1>Gestion de TOUTES les Réservations</h1>
 
     <a href="{{ path('app_reservation_new') }}" class="btn btn-primary mb-3">Ajouter une réservation</a>
 
     <table class="table table-hover">
-        <thead>
+        <thead class="table-dark">
             <tr>
+                <th>ID</th>
                 <th>Client</th>
                 <th>Date</th>
                 <th>Personnes</th>
                 <th>Statut</th>
+                <th>Table</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for reservation in reservations %}
                 <tr>
-                    <td>{{ reservation.customer.email }}</td>
-                    <td>{{ reservation.reservationDate|date('Y-m-d H:i') }}</td>
-                    <td>{{ reservation.nbrPersonne }}</td>
-                    <td>{{ reservation.status }}</td>
+                    <td>{{ reservation.getId() }}</td>
+                    <td>{{ reservation.getCustomer().email }}</td>
+                    
+                
+                    <td>{{ reservation.getReservationDate() ? reservation.getReservationDate()|date('Y-m-d H:i') : '' }}</td>
+                    
+                   
+                    <td>{{ reservation.getNbrPersonne() }}</td>
+                    
+                    <td><span class="badge bg-secondary">{{ reservation.getStatus() }}</span></td>
+                    
+                    
+                    <td>#{{ reservation.getTableRes().id }}</td>
+
+
                     <td>
-                        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                        {# On n'inclut pas le formulaire de suppression pour l'instant #}
+                        <div class="d-flex align-items-center">
+                            <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-warning btn-sm me-2">Modifier</a>
+                            {{ include('reservation/delete_form.html.twig') }}
+                        </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">Aucune réservation trouvée.</td>
+                    <td colspan="7" class="text-center">Aucune réservation trouvée dans le système.</td>
                 </tr>
             {% endfor %}
         </tbody>
