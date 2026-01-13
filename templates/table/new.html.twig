@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %} Nouvelle Table
+{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <h2>Ajouter une Table</h2>
+    
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }} {# هنا كيتطبق الـ CSS اللي درنا في الـ PHP #}
+            {{ form_errors(form.nom) }} {# هنا كيبانو أخطاء الـ Validation [cite: 39] #}
+        </div>
+        <div class="mb-3">
+                {{ form_label(form.capacite) }}
+                {{ form_widget(form.capacite) }}
+                {{ form_errors(form.capacite) }}
+            </div>
+        <div class="mb-3">
+                {{ form_label(form.statut) }}
+                {{ form_widget(form.statut) }}
+                {{ form_errors(form.statut) }}
+            </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
