@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class TableController extends AbstractController
 {
     #[Route('/table', name: 'app_table_index')]
-    // #[IsGranted('ROLE_SERVER')]
+    #[IsGranted('ROLE_SERVER')]
     public function index(TableRepository $tableRepository): Response
     {   
         $tables = $tableRepository->findAll();
@@ -26,7 +26,7 @@ final class TableController extends AbstractController
     }
 
     #[Route('/table/new', name: 'app_table_new')]
-    // #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
 public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $table = new Table();
@@ -50,7 +50,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
 
 #[Route('/table/edit/{id}', name: 'app_table_edit')]
-// #[IsGranted('ROLE_SERVER')]
+#[IsGranted('ROLE_SERVER')]
 public function edit(Table $table, Request $request, EntityManagerInterface $entityManager): Response
 {
     // كنخدمو بنفس الـ FormType اللي صاوبنا
@@ -71,7 +71,7 @@ public function edit(Table $table, Request $request, EntityManagerInterface $ent
 }
 
 #[Route('/table/delete/{id}', name: 'app_table_delete')]
-// #[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN')]
 public function delete(Table $table, EntityManagerInterface $entityManager): Response
 {    
     $entityManager->remove($table);

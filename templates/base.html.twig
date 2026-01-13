@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Resto-Booking !{% endblock %}</title>
         
@@ -24,6 +25,7 @@
                 font-weight: bold;
             }
         </style>
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
@@ -37,12 +39,18 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto text-uppercase small">
-                        {# رابط الطوابل - مهم جدا باش تنقلي للمشروع ديالك #}
+                        {# table#}
+                        {% if app.user %}
+                        {# menu #}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_menu') }}">Le Menu</a> 
+                        </li>
+                        {% if is_granted('ROLE_SERVER') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_table_index') }}">Les Tables</a>
                         </li>
-
-                        {% if app.user %}
+                        {% endif %}
+                        
                             
                             {# ========================================================= #}
                             {# === LOGIQUE DE NAVIGATION CORRIGÉE === #}
@@ -71,15 +79,28 @@
                         {% endif %}
                     </ul>
                 </div>
+
             </div>
         </nav>
 
         <div class="container mt-4">
+            {# --- كود الإشعارات الجديد --- #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             {% block body %}{% endblock %}
         </div>
+
 
         {# JavaScript ضروري للـ Responsive #}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         {% block javascripts %}{% endblock %}
+
     </body>
 </html>

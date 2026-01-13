@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Menu{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow p-4 border-0">
+                    <h1 class="h3 mb-4 font-weight-normal text-center text-uppercase text-secondary">
+                        <i class="fas fa-plus-circle me-2"></i>Ajouter un nouveau Menu
+                    </h1>
+                    <hr class="mb-4">
+                    
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Name du Menu</label>
+                            {{ form_row(form.name, {'label': false, 'attr': {'class': 'form-control', 'placeholder': 'Ex: Pizza Royale'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            {{ form_row(form.description, {'label': false, 'attr': {'class': 'form-control', 'rows': '3', 'placeholder': 'Détails du menu...'}}) }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Prix (DH)</label>
+                                {{ form_row(form.prix, {'label': false, 'attr': {'class': 'form-control', 'placeholder': '0.00'}}) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Catégorie</label>
+                                {{ form_row(form.categorie, {'label': false, 'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-dark w-100 py-3 mt-3 text-uppercase fw-bold shadow-sm">
+                           <i class="fas fa-save me-2"></i>Enregistrer le menu
+                        </button>
+                    {{ form_end(form) }}
+
+                    <div class="text-center mt-4 border-top pt-3">
+                        <a href="{{ path('app_menu') }}" class="text-decoration-none text-muted small">
+                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste des menus
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
